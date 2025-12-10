@@ -169,14 +169,27 @@ def main():
     print(f"\n✅ Bot Token: {'✓ Loaded' if BOT_TOKEN else '✗ Missing'}")
     print(f"🌐 API Base: {API_BASE[:50]}...")
     
-    application = Application.builder().token(BOT_TOKEN).build()
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
-    print("\n🤖 Bot started successfully!")
-    print("🔍 Waiting for messages...\n")
-    
-    application.run_polling()
+    # Create application with error handling
+    try:
+        application = Application.builder().token(BOT_TOKEN).build()
+        
+        # Add handlers
+        application.add_handler(CommandHandler("start", start))
+        application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+        
+        print("\n🤖 Bot started successfully!")
+        print("🔍 Waiting for messages...\n")
+        
+        # Start polling
+        application.run_polling()
+        
+    except Exception as e:
+        print(f"\n❌ Bot startup failed: {e}")
+        print("Possible solutions:")
+        print("1. Check BOT_TOKEN is correct")
+        print("2. Downgrade Python to 3.11 or 3.12")
+        print("3. Upgrade python-telegram-bot to version 21.x")
+        exit(1)
 
 if __name__ == "__main__":
     main()
